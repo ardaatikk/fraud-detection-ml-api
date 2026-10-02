@@ -1,0 +1,9 @@
+numpy
+pandas
+pyarrow
+scikit-learn
+matplotlib
+joblib
+requests
+tqdm
+jupyter
