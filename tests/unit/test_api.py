@@ -101,31 +101,67 @@ def test_predict_endpoint() -> None:
 def test_predict_rejects_missing_fields() -> None:
     """Prediction requests with missing fields should be rejected."""
 
-    response = client.post(
-        "/predict",
-        json={
-            "transaction_id": 123,
-            "customer_id": 100,
-        },
-    )
+    feature_builder = MagicMock()
+    predictor = MagicMock()
 
-    assert response.status_code == 422
+    app.dependency_overrides[
+        get_feature_builder
+    ] = lambda: feature_builder
+
+    app.dependency_overrides[
+        get_predictor
+    ] = lambda: predictor
+
+    try:
+        response = client.post(
+            "/predict",
+            json={
+                "transaction_id": 123,
+                "customer_id": 100,
+            },
+        )
+
+        assert response.status_code == 422
+
+        feature_builder.build.assert_not_called()
+        predictor.predict.assert_not_called()
+
+    finally:
+        app.dependency_overrides.clear()
 
 
 def test_predict_rejects_negative_amount() -> None:
     """Negative transaction amounts should be rejected."""
 
-    response = client.post(
-        "/predict",
-        json={
-            "transaction_id": 123,
-            "customer_id": 100,
-            "terminal_id": 10,
-            "tx_amount": -50.0,
-            "tx_datetime": (
-                "2018-09-04T12:00:00"
-            ),
-        },
-    )
+    feature_builder = MagicMock()
+    predictor = MagicMock()
 
-    assert response.status_code == 422
+    app.dependency_overrides[
+        get_feature_builder
+    ] = lambda: feature_builder
+
+    app.dependency_overrides[
+        get_predictor
+    ] = lambda: predictor
+
+    try:
+        response = client.post(
+            "/predict",
+            json={
+                "transaction_id": 123,
+                "customer_id": 100,
+                "terminal_id": 10,
+                "tx_amount": -50.0,
+                "tx_datetime": (
+                    "2018-09-04T12:00:00"
+                ),
+            },
+        )
+
+        assert response.status_code == 422
+
+        feature_builder.build.assert_not_called()
+        predictor.predict.assert_not_called()
+
+    finally:
+        app.dependency_overrides.clear()
