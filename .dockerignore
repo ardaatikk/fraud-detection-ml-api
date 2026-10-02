@@ -1,0 +1,30 @@
+# Git
+.git
+.github
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+environment/
+
+# Local datasets
+data/
+
+# Development files
+tests/
+notebooks/
+requirements-dev.txt
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Documentation
+README.md
